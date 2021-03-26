@@ -12,14 +12,80 @@ namespace POOBasics
 {
     class Box
     {
-        public int width;
-        public int length;
-        public int height;
+        // estado del objeto:
+        //      combinación de los valores de sus variables internas
+        private int width;
+        private int length;
+        private int height;
 
-        public static int CalculateVolume(Box box)
+        public int Width
         {
-            return box.width * box.length * box.height;
+            get => width;
+
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentException("value"); // generar excepción
+                }
+
+                width = value;
+            }
         }
+
+        public int Length
+        {
+            // public int get-Length()
+            get => length;
+
+            // public void set-Length(int value)
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentException("value"); // generar excepción
+                }
+
+                length = value;
+            }
+        }
+
+        public int Height
+        {
+            get => height;
+
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new ArgumentException("value"); // generar excepción
+                }
+
+                height = value;
+            }
+        }
+
+        //public int GetLength()
+        //{
+        //    return length;
+        //}
+
+        //public void SetLength(int length)
+        //{
+        //    if (length <= 0)
+        //    {
+        //        throw new ArgumentException("l"); // generar excepción
+        //    }
+
+        //    this.length = length;
+        //}
+
+        public int Volume
+        {
+            get => width * length * height;
+        }
+
+        //public int CalculateVolume() => width * length * height;
     }
 
     class Program
@@ -27,22 +93,27 @@ namespace POOBasics
         static void Main(string[] args)
         {
             Box b1 = new Box();
-            b1.width = 3; // el width de la caja a la que hace referencia b1
-            b1.length = 2;
-            b1.height = 1;
+            b1.Width = 3; // el width de la caja a la que hace referencia b1
+            b1.Length = 2;
+            b1.Height = 1;
 
             Box b2 = new Box();
-            b2.width = 6;
-            b2.length = b1.length;
-            b2.height = b1.height;
+            b2.Width = 6;
+            b2.Length = b1.Length;
+            b2.Height = b1.Height;
 
-            int volume = Box.CalculateVolume(b1);
-            WriteLine($"\nVolumen = {volume}");
-            WriteLine($"b1->({b1.width},{b1.length},{b1.height})");
+            WriteLine($"\nVolumen = {b1.Volume}");
+            WriteLine($"b1->({b1.Width},{b1.Length},{b1.Height})");
 
-            volume = Box.CalculateVolume(b2);
-            WriteLine($"\nVolumen = {volume}");
-            WriteLine($"b2->({b2.width},{b2.length},{b2.height})");
+            WriteLine($"\nVolumen = {b2.Volume}");
+            WriteLine($"b2->({b2.Width},{b2.Length},{b2.Height})");
+
+            //b2.height = 2 * b1.height + 3 * b1.height;
+            //b2.SetLength(2 * b1.GetLength() + 3 * b1.GetLength());
+
+            //b2.Length += 2;
+            //b2.Length = b2.Length + 2;
+            //b2.SetLength(b2.GetLength() + 2);
         }
     }
 }
