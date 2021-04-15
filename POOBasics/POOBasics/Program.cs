@@ -89,32 +89,26 @@ namespace POOBasics
 
         // empty constructor (default)
         // constructor sin parámetros
-        public Box()
+        public Box() :
+            this(1)
         {
-            width = 1;
-            length = 1;
-            height = 1;
         }
 
-        public Box(int size)
+        public Box(int size) :
+            this(size, size, size)
         {
-            width = size;
-            length = size;
-            height = size;
         }
 
         public Box(int width, int length, int height)
         {
-            this.width = width;
-            this.length = length;
-            this.height = height;
+            Width = width;
+            Length = length;
+            Height = height;
         }
 
-        public Box(Box box)
+        public Box(Box box) :
+            this(box.width, box.length, box.height)
         {
-            width = box.width;
-            length = box.length;
-            height = box.height;
         }
     }
 
@@ -123,7 +117,20 @@ namespace POOBasics
         static void Main(string[] args)
         {
             //Box[] boxes = new Box[5];
-            Box[] boxes =
+            //Box[] boxes =
+            //{
+            //    new Box(),
+            //    new Box(1, 2, 3),
+            //    new Box(3, 2, 1),
+            //    new Box(),
+            //    new Box(5),
+            //    new Box(2)
+            //};
+
+            //boxes[2].Height = 10;
+            //boxes[6] = new Box(100);
+
+            List<Box> boxes = new List<Box>()
             {
                 new Box(),
                 new Box(1, 2, 3),
@@ -132,6 +139,12 @@ namespace POOBasics
                 new Box(5),
                 new Box(2)
             };
+
+            boxes.Add(new Box(100));
+            boxes.RemoveAt(4);
+            boxes.Insert(0, new Box(50));
+
+            boxes[0].Width = 20;
 
             foreach (Box box in boxes)
             {
