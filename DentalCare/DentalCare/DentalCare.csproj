@@ -48,6 +48,7 @@
     <Compile Include="Day.cs" />
     <Compile Include="EasyFile.cs" />
     <Compile Include="Patient.cs" />
+    <Compile Include="PendingAppointment.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schedule.cs" />
