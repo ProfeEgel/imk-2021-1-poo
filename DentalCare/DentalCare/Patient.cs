@@ -12,6 +12,8 @@ namespace DentalCare
         public string FirstName { get; }
         public string LastName { get; }
 
+        public string FullName => $"{LastName}, {FirstName}";
+
         public Patient(int id, string firstName, string lastName)
         {
             Id = id;

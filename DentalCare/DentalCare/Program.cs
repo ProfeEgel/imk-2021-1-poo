@@ -12,6 +12,63 @@ namespace DentalCare
     {
         static Agenda agenda;
 
+        /*
+        static void PrintPatient(Patient p)
+        {
+            WriteLine($"{p.Id} - {p.FullName}.");
+        }
+        */
+
+
+        //static void MainLambda(string[] args)
+        //{
+        //    Agenda agenda = new Agenda();
+        //    List<Patient> patients = agenda.patients;
+
+        //    /*
+        //    Patient pa = null;
+        //    foreach (var p in patients)
+        //    {
+        //        if (p.FirstName == "Diego")
+        //        {
+        //            pa = p;
+        //        }
+        //    }
+        //    */
+
+        //    patients.Sort((p1, p2) => p1.Id.CompareTo(p2.Id));
+        //    patients.FindAll(p => p.LastName[0] == 'S')
+        //        .ForEach(p => WriteLine($"{p.Id} - {p.FullName}."));
+
+        //    WriteLine();
+
+        //    Patient pa = patients.Find(p => p.FirstName == "Diego");
+        //    WriteLine($"ENCONTRADO: {pa.Id} - {pa.FullName}.");
+
+        //    WriteLine();
+
+        //    patients.ForEach(p => WriteLine($"{p.Id} - {p.FullName}."));
+
+        //    int sum = 0;
+        //    patients.ForEach(p => sum += p.Id);
+
+        //    //patients.ForEach(PrintPatient);
+
+        //    /*
+        //    foreach (var p in patients)
+        //    {
+        //        WriteLine($"{p.Id} - {p.FullName}.");
+        //    }
+        //    */
+
+        //    /*
+        //    for (int i = 0; i < patients.Count; ++i)
+        //    {
+        //        WriteLine($"{patients[i].Id} - {patients[i].LastName}, {patients[i].FirstName}.");
+        //    }
+        //    */
+        //}
+
         static void Main(string[] args)
         {
             agenda = new Agenda();
@@ -96,18 +153,14 @@ namespace DentalCare
 
         static void OpcionCitasPorPaciente()
         {
-            List<PendingAppointment> appointments = agenda.GetPendingAppointments();
-
             Clear();
             WriteLine("****************************************");
             WriteLine("*      REPORTE (CITAS PENDIENTES)      *");
             WriteLine("****************************************");
             WriteLine();
 
-            foreach (PendingAppointment a in appointments)
-            {
-                WriteLine($"{a.Patient.LastName}, {a.Patient.FirstName}. {a.Day.Name} - {a.Time.Description}");
-            }
+            agenda.GetPendingAppointments()
+                .ForEach(a => WriteLine($"{a.Patient.FullName}. {a.Day.Name} - {a.Time.Description}"));
 
             WriteLine();
             ReadKey();

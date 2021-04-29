@@ -37,16 +37,17 @@ namespace DentalCare
 
         public List<PendingAppointment> GetPendingAppointments()
         {
-            List<PendingAppointment> appointments = new List<PendingAppointment>();
+            var pendings = new List<PendingAppointment>();
 
-            // TO BE REPLACED
-            appointments.Add(new PendingAppointment(patients[0], days[0], times[0]));
-            appointments.Add(new PendingAppointment(patients[1], days[1], times[1]));
-            appointments.Add(new PendingAppointment(patients[2], days[2], times[2]));
-            appointments.Add(new PendingAppointment(patients[3], days[3], times[3]));
-            // TO BE REPLACED
+            appointments.ForEach(a =>
+                    pendings.Add(new PendingAppointment(
+                        patients.Find(p => p.Id == a.PatientId),
+                        days.Find(d => d.Id == a.DayId),
+                        times.Find(t => t.Id == a.TimeId))));
 
-            return appointments;
+            pendings.Sort((p1, p2) => p1.Patient.FullName.CompareTo(p2.Patient.FullName));
+
+            return pendings;
         }
 
         //private Day DayCallback(string[] tokens)
