@@ -135,7 +135,7 @@ namespace DentalCare
                         break;
 
                     case 2:
-                        WriteLine("\n¡OPCION NO IMPLEMENTADA!");
+                        OpcionCitasPorDia();
                         ReadKey();
                         break;
 
@@ -166,6 +166,33 @@ namespace DentalCare
             ReadKey();
         }
 
+        static void OpcionCitasPorDia()
+        {
+            Clear();
+            WriteLine("****************************************");
+            WriteLine("*      REPORTE (CITAS PENDIENTES)      *");
+            WriteLine("****************************************");
+            WriteLine();
+
+            agenda.GetDays().ForEach(d =>
+            {
+                WriteLine($"{d.Name}");
+                var appointments = agenda.GetPendingAppointmentsPerDay(d);
+                if (appointments.Count > 0)
+                {
+                    appointments.ForEach(a =>
+                        WriteLine($"\t{a.Time.Description} - {a.Patient.FullName}."));
+                }
+                else
+                {
+                    WriteLine($"\tNo hay citas pendientes.");
+                }
+            });
+
+            WriteLine();
+            ReadKey();
+        }
+
         static void SubmenuCitas()
         {
             int opcion = -1;
@@ -186,8 +213,11 @@ namespace DentalCare
                 switch (opcion)
                 {
                     case 1:
+                        OpcionAgendar();
+                        break;
+
                     case 2:
-                        WriteLine("\n¡OPCION NO IMPLEMENTADA!");
+                        WriteLine("\n¡OPCIÓN NO IMPLEMENTADA");
                         ReadKey();
                         break;
 
@@ -201,6 +231,53 @@ namespace DentalCare
                 }
             }
             while (opcion != 0);
+        }
+
+        static void OpcionAgendar()
+        {
+            Clear();
+            WriteLine("****************************************");
+            WriteLine("*            AGENDAR CITAS             *");
+            WriteLine("****************************************");
+            WriteLine();
+
+            Write("Clave del paciente: ");
+            int id = Convert.ToInt32(ReadLine());
+
+            if (agenda.ValidatePatientId(id))
+            {
+                if (!agenda.HasPendingAppointment(id))
+                {
+                    List<Day> availableDays = agenda.GetAvailableDays();
+                    if (availableDays.Count > 0)
+                    {
+                        WriteLine("\n*** Días disponibles ***");
+                        for (int i = 0; i < availableDays.Count; ++i)
+                        {
+                            WriteLine($"{i} - {availableDays[i].Name}");
+                        }
+
+                        Write("\nElige un día: ");
+                        int dayId = Convert.ToInt32(ReadLine());
+
+                    }
+                    else
+                    {
+                        WriteLine("\n¡No hay días disponibles para citas!");
+                    }
+                }
+                else
+                {
+                    WriteLine("\n¡Paciente ya posee una cita!");
+                }
+            }
+            else
+            {
+                WriteLine("\n¡ID del paciente no es válido!");
+            }
+            
+            WriteLine();
+            ReadKey();
         }
 
         //delegate double Calculate3(int a, int b, int c);

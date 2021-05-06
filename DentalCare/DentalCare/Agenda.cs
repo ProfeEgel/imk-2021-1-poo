@@ -50,6 +50,44 @@ namespace DentalCare
             return pendings;
         }
 
+        public List<Day> GetDays()
+        {
+            List<Day> days = new List<Day>(this.days);
+            days.Sort((d1, d2) => d1.Id.CompareTo(d2.Id));
+            return days;
+        }
+
+        public List<PendingAppointment> GetPendingAppointmentsPerDay(Day day)
+        {
+            var pendings = new List<PendingAppointment>();
+
+            appointments.FindAll(a => a.DayId == day.Id).ForEach(a =>
+                    pendings.Add(new PendingAppointment(
+                        patients.Find(p => p.Id == a.PatientId),
+                        days.Find(d => d.Id == a.DayId),
+                        times.Find(t => t.Id == a.TimeId))));
+
+            pendings.Sort((p1, p2) => p1.Time.Id.CompareTo(p2.Time.Id));
+
+            return pendings;
+        }
+
+        public bool ValidatePatientId(int id) =>
+            patients.Exists(p => p.Id == id);
+
+        public bool HasPendingAppointment(int id) =>
+            appointments.Exists(a => a.PatientId == id);
+
+        public List<Day> GetAvailableDays()
+        {
+            var days = new List<Day>(this.days);
+            days.RemoveAll(d => !schedules.Exists(s => s.DayId == d.Id));
+
+            // remover días llenos
+
+            return days;
+        }
+
         //private Day DayCallback(string[] tokens)
         //{
         //    //"0|Lunes" => ["0", "Lunes"]
