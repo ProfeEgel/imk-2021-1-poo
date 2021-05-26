@@ -86,9 +86,9 @@ namespace DentalCare
                 WriteLine("\t0. Salir");
                 WriteLine();
                 Write("Elige una opción: ");
-                
+
                 opcion = Convert.ToInt32(ReadLine());
-                switch(opcion)
+                switch (opcion)
                 {
                     case 1:
                         SubmenuConsultas();
@@ -217,8 +217,7 @@ namespace DentalCare
                         break;
 
                     case 2:
-                        WriteLine("\n¡OPCIÓN NO IMPLEMENTADA");
-                        ReadKey();
+                        OpcionCancelar();
                         break;
 
                     case 0:
@@ -242,11 +241,11 @@ namespace DentalCare
             WriteLine();
 
             Write("Clave del paciente: ");
-            int id = Convert.ToInt32(ReadLine());
+            int patientId = Convert.ToInt32(ReadLine());
 
-            if (agenda.ValidatePatientId(id))
+            if (agenda.ValidatePatientId(patientId))
             {
-                if (!agenda.HasPendingAppointment(id))
+                if (!agenda.HasPendingAppointment(patientId))
                 {
                     List<Day> availableDays = agenda.GetAvailableDays();
                     if (availableDays.Count > 0)
@@ -258,8 +257,34 @@ namespace DentalCare
                         }
 
                         Write("\nElige un día: ");
-                        int dayId = Convert.ToInt32(ReadLine());
+                        int dayIndex = Convert.ToInt32(ReadLine());
+                        Day selectedDay = availableDays[dayIndex];
 
+                        List<Time> availableTimes = agenda.GetAvailableTime(selectedDay);
+                        WriteLine("\n*** Horas disponibles ***");
+                        for (int i = 0; i < availableTimes.Count; ++i)
+                        {
+                            WriteLine($"{i} - {availableTimes[i].Description}");
+
+                            if (i == availableTimes.Count - 1)
+                            {
+                                WriteLine($"{i + 1} - Cancelar");
+                            }
+                        }
+
+                        Write("\nElige una hora (o cancelar): ");
+                        int timeIndex = Convert.ToInt32(ReadLine());
+                        if (timeIndex < availableTimes.Count)
+                        {
+                            Time selectedTime = availableTimes[timeIndex];
+                            agenda.CreateAppointment(patientId, selectedDay, selectedTime);
+
+                            WriteLine("\n¡HORARIO ASIGNADO!");
+                        }
+                        else
+                        {
+                            WriteLine("\n¡HORARIO NO ASIGNADO!");
+                        }
                     }
                     else
                     {
@@ -275,7 +300,48 @@ namespace DentalCare
             {
                 WriteLine("\n¡ID del paciente no es válido!");
             }
-            
+
+            WriteLine();
+            ReadKey();
+        }
+
+        static void OpcionCancelar()
+        {
+            Clear();
+            WriteLine("****************************************");
+            WriteLine("*            CANCELAR CITAS            *");
+            WriteLine("****************************************");
+            WriteLine();
+
+            Write("Clave del paciente: ");
+            int patientId = Convert.ToInt32(ReadLine());
+
+            if (agenda.ValidatePatientId(patientId))
+            {
+                if (agenda.HasPendingAppointment(patientId))
+                {
+                    Write("\n¿Confirma que desea borrar cita? [s/n]: ");
+                    if (ReadLine().Trim().ToUpper()[0] == 'S')
+                    {
+                        agenda.CancelAppointment(patientId); // 406268, 899160
+
+                        WriteLine("\n¡CITA CANCELADA!");
+                    }
+                    else
+                    {
+                        WriteLine("\n¡CITA NO CANCELADA!");
+                    }
+                }
+                else
+                {
+                    WriteLine("\n¡Paciente no posee una cita!");
+                }
+            }
+            else
+            {
+                WriteLine("\n¡ID del paciente no es válido!");
+            }
+
             WriteLine();
             ReadKey();
         }

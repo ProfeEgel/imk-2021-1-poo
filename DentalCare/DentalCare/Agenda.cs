@@ -81,11 +81,57 @@ namespace DentalCare
         public List<Day> GetAvailableDays()
         {
             var days = new List<Day>(this.days);
+            
+            // remover días que no estén presentes en schedule
             days.RemoveAll(d => !schedules.Exists(s => s.DayId == d.Id));
 
             // remover días llenos
+            days.RemoveAll(d =>
+            {
+                bool full = true;
+                schedules.FindAll(s => s.DayId == d.Id).ForEach(s =>
+                {
+                    if (!appointments.Exists(a => a.DayId == s.DayId && a.TimeId == s.TimeId))
+                    {
+                        full = false;
+                    }
+                });
+                return full;
+            });
 
             return days;
+        }
+
+        public List<Time> GetAvailableTime(Day day)
+        {
+            List<Time> availableTimes = new List<Time>();
+
+            schedules.FindAll(s => s.DayId == day.Id).ForEach(s => {
+                if (!appointments.Exists(a => a.DayId == s.DayId && a.TimeId == s.TimeId))
+                {
+                    availableTimes.Add(times.Find(t => t.Id == s.TimeId));
+                }
+            });
+
+            return availableTimes;
+        }
+
+        public void CreateAppointment(int patientId, Day selectedDay, Time selectedTime)
+        {
+            appointments.Add(new Appointment(patientId, selectedDay.Id, selectedTime.Id));
+
+            EasyFile<Appointment>.SaveDataToFile("appointments.txt",
+                                                 new[] { "PatientId", "DayId", "TimeId" },
+                                                 appointments);
+        }
+
+        public void CancelAppointment(int patientId)
+        {
+            appointments.RemoveAll(a => a.PatientId == patientId);
+
+            EasyFile<Appointment>.SaveDataToFile("appointments.txt",
+                                                 new[] { "PatientId", "DayId", "TimeId" },
+                                                 appointments);
         }
 
         //private Day DayCallback(string[] tokens)
