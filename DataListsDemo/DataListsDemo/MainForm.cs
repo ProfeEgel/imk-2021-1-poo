@@ -169,5 +169,33 @@ namespace DataListsDemo
             pbInstall.Value = (int)nudProgress.Value;
             pbStatus.Value = (int)nudProgress.Value;
         }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            User user = cmbUsers.SelectedItem as User;
+
+            SettingsForm dlg = new SettingsForm(user.FullName);
+            switch (dlg.ShowDialog())
+            {
+                case DialogResult.OK:
+                    tsStatus.Text = "¡Settings OK!";
+                    nudProgress.Value = dlg.Value;
+                    break;
+
+                case DialogResult.Yes:
+                    tsStatus.Text = "¡Settings YES!";
+                    break;
+
+                default:
+                case DialogResult.Cancel:
+                    tsStatus.Text = "¡Settings CANCELED!";
+                    break;
+            }
+        }
     }
 }
